@@ -3,6 +3,9 @@
 import { useMemo, useState } from "react";
 import { StatusBadge } from "@/components/status-badge";
 import { SemaforoBadge } from "@/components/semaforo-badge";
+import { EditAcompanhamentoModal } from "@/components/edit-acompanhamento-form";
+import { EditSemaforoModal } from "@/components/edit-semaforo-form";
+import { AuditHistoryDrawer } from "@/components/audit-history-drawer";
 import { formatDate, formatPercent } from "@/lib/format";
 
 export interface AtividadeRow {
@@ -20,6 +23,9 @@ export interface AtividadeRow {
 export function AtividadesTable({ items }: { items: AtividadeRow[] }) {
   const [search, setSearch] = useState("");
   const [acaoFiltro, setAcaoFiltro] = useState("todas");
+  const [editando, setEditando] = useState<AtividadeRow | null>(null);
+  const [editandoSemaforo, setEditandoSemaforo] = useState<AtividadeRow | null>(null);
+  const [historico, setHistorico] = useState<AtividadeRow | null>(null);
 
   const acoes = useMemo(() => Array.from(new Set(items.map((i) => i.acaoId))).sort(), [items]);
 
@@ -66,6 +72,7 @@ export function AtividadesTable({ items }: { items: AtividadeRow[] }) {
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">% Execução</th>
               <th className="px-4 py-2">Semáforo</th>
+              <th className="px-4 py-2">Ações</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -86,11 +93,24 @@ export function AtividadesTable({ items }: { items: AtividadeRow[] }) {
                 <td className="px-4 py-2">
                   <SemaforoBadge semaforo={item.semaforoAtual} />
                 </td>
+                <td className="px-4 py-2">
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <button onClick={() => setEditando(item)} className="text-blue-700 hover:underline">
+                      Atualizar
+                    </button>
+                    <button onClick={() => setEditandoSemaforo(item)} className="text-blue-700 hover:underline">
+                      Semáforo
+                    </button>
+                    <button onClick={() => setHistorico(item)} className="text-slate-600 hover:underline">
+                      Histórico
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
                   Nenhuma atividade encontrada.
                 </td>
               </tr>
@@ -98,6 +118,34 @@ export function AtividadesTable({ items }: { items: AtividadeRow[] }) {
           </tbody>
         </table>
       </div>
+
+      {editando && (
+        <EditAcompanhamentoModal
+          tipo="atividade"
+          itemId={editando.id}
+          itemLabel={editando.id}
+          statusAtual={editando.statusAtual}
+          percentualAtual={editando.percentualAtual}
+          onClose={() => setEditando(null)}
+        />
+      )}
+      {editandoSemaforo && (
+        <EditSemaforoModal
+          tipo="atividade"
+          itemId={editandoSemaforo.id}
+          itemLabel={editandoSemaforo.id}
+          semaforoAtual={editandoSemaforo.semaforoAtual}
+          onClose={() => setEditandoSemaforo(null)}
+        />
+      )}
+      {historico && (
+        <AuditHistoryDrawer
+          tipo="atividade"
+          itemId={historico.id}
+          itemLabel={historico.id}
+          onClose={() => setHistorico(null)}
+        />
+      )}
     </div>
   );
 }

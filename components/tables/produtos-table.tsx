@@ -1,8 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { StatusBadge } from "@/components/status-badge";
 import { SemaforoBadge } from "@/components/semaforo-badge";
+import { EditAcompanhamentoModal } from "@/components/edit-acompanhamento-form";
+import { EditSemaforoModal } from "@/components/edit-semaforo-form";
+import { AuditHistoryDrawer } from "@/components/audit-history-drawer";
 import { formatDate, formatPercent } from "@/lib/format";
 
 export interface ProdutoRow {
@@ -21,6 +25,9 @@ export interface ProdutoRow {
 export function ProdutosTable({ items }: { items: ProdutoRow[] }) {
   const [search, setSearch] = useState("");
   const [acaoFiltro, setAcaoFiltro] = useState("todas");
+  const [editando, setEditando] = useState<ProdutoRow | null>(null);
+  const [editandoSemaforo, setEditandoSemaforo] = useState<ProdutoRow | null>(null);
+  const [historico, setHistorico] = useState<ProdutoRow | null>(null);
 
   const acoes = useMemo(() => Array.from(new Set(items.map((i) => i.acaoId))).sort(), [items]);
 
@@ -67,6 +74,7 @@ export function ProdutosTable({ items }: { items: ProdutoRow[] }) {
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">% Desenvolvimento</th>
               <th className="px-4 py-2">Semáforo</th>
+              <th className="px-4 py-2">Ações</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -85,11 +93,27 @@ export function ProdutosTable({ items }: { items: ProdutoRow[] }) {
                 <td className="px-4 py-2">
                   <SemaforoBadge semaforo={item.semaforoAtual} />
                 </td>
+                <td className="px-4 py-2">
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <button onClick={() => setEditando(item)} className="text-blue-700 hover:underline">
+                      Atualizar
+                    </button>
+                    <button onClick={() => setEditandoSemaforo(item)} className="text-blue-700 hover:underline">
+                      Semáforo
+                    </button>
+                    <button onClick={() => setHistorico(item)} className="text-slate-600 hover:underline">
+                      Histórico
+                    </button>
+                    <Link href={`/produtos/${item.id}`} className="text-slate-600 hover:underline">
+                      Detalhes
+                    </Link>
+                  </div>
+                </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
                   Nenhum produto encontrado.
                 </td>
               </tr>
@@ -97,6 +121,34 @@ export function ProdutosTable({ items }: { items: ProdutoRow[] }) {
           </tbody>
         </table>
       </div>
+
+      {editando && (
+        <EditAcompanhamentoModal
+          tipo="produto"
+          itemId={editando.id}
+          itemLabel={editando.id}
+          statusAtual={editando.statusAtual}
+          percentualAtual={editando.percentualAtual}
+          onClose={() => setEditando(null)}
+        />
+      )}
+      {editandoSemaforo && (
+        <EditSemaforoModal
+          tipo="produto"
+          itemId={editandoSemaforo.id}
+          itemLabel={editandoSemaforo.id}
+          semaforoAtual={editandoSemaforo.semaforoAtual}
+          onClose={() => setEditandoSemaforo(null)}
+        />
+      )}
+      {historico && (
+        <AuditHistoryDrawer
+          tipo="produto"
+          itemId={historico.id}
+          itemLabel={historico.id}
+          onClose={() => setHistorico(null)}
+        />
+      )}
     </div>
   );
 }

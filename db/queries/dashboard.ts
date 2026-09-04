@@ -11,7 +11,12 @@ import {
   produtos,
   produtosEstadoAtual,
   repasses,
+  responsaveis,
 } from "../schema";
+
+export async function listResponsaveis() {
+  return db.select().from(responsaveis).orderBy(asc(responsaveis.nome));
+}
 
 export async function listAcoes() {
   return db.select().from(acoes).orderBy(asc(acoes.id));
