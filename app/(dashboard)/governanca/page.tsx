@@ -1,3 +1,12 @@
+import { listarCondicionantes } from "@/lib/actions/condicionantes";
+import { listarPendencias } from "@/lib/actions/pendencias";
+import { listarRelatoriosComSnapshotCount } from "@/lib/actions/relatorios";
+import { PendenciasPanel } from "@/components/governanca/pendencias-panel";
+import { CondicionantesPanel } from "@/components/governanca/condicionantes-panel";
+import { RelatoriosPanel } from "@/components/governanca/relatorios-panel";
+
+export const dynamic = "force-dynamic";
+
 const CICLO_ETAPAS = [
   "Atualizar execução (Atividades e Produtos)",
   "Validar as atualizações registradas",
@@ -7,7 +16,13 @@ const CICLO_ETAPAS = [
   "Prestar contas (Relatório Gerencial)",
 ];
 
-export default function GovernancaPage() {
+export default async function GovernancaPage() {
+  const [pendencias, condicionantes, relatorios] = await Promise.all([
+    listarPendencias(),
+    listarCondicionantes(),
+    listarRelatoriosComSnapshotCount(),
+  ]);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -36,22 +51,29 @@ export default function GovernancaPage() {
         <p className="mt-2 text-sm text-slate-600">
           Cada Relatório Gerencial funciona como uma fotografia histórica e imutável do
           fechamento do ciclo correspondente — uma vez fechado, seu conteúdo não é alterado
-          mesmo que o estado real das Atividades/Produtos mude depois.
+          mesmo que o estado real das Atividades/Produtos mude depois (garantido pelo banco de
+          dados, não apenas pela interface).
         </p>
-        <p className="mt-2 text-sm text-slate-500 italic">
-          Nenhum Relatório Gerencial foi registrado ainda nesta implantação inicial. O
-          fechamento de ciclos e a geração de snapshots imutáveis fazem parte de uma fase
-          seguinte, a ser aprovada separadamente.
-        </p>
+        <div className="mt-3">
+          <RelatoriosPanel relatorios={relatorios} />
+        </div>
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-700">Pendências e Condicionantes</h2>
-        <p className="mt-2 text-sm text-slate-500 italic">
-          O registro de Pendências e Condicionantes (entidades persistentes, com estados e
-          histórico próprios) ainda não está habilitado nesta implantação inicial — faz parte de
-          uma fase seguinte, a ser aprovada separadamente.
+        <h2 className="text-sm font-semibold text-slate-700">Pendências</h2>
+        <p className="mt-2 text-xs text-slate-500">
+          Entidade persistente entre ciclos — atualizar preserva o histórico, nunca duplica.
         </p>
+        <div className="mt-3">
+          <PendenciasPanel pendencias={pendencias} />
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-semibold text-slate-700">Condicionantes</h2>
+        <div className="mt-3">
+          <CondicionantesPanel condicionantes={condicionantes} />
+        </div>
       </section>
     </div>
   );

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { asc, desc, eq } from "drizzle-orm";
+import { asc, count, desc, eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import {
   atividades,
@@ -19,6 +19,16 @@ import type { ActionResult } from "@/lib/actions/atividades";
 
 export async function listarRelatorios() {
   return db.select().from(relatoriosGerenciais).orderBy(asc(relatoriosGerenciais.codigo));
+}
+
+export async function listarRelatoriosComSnapshotCount() {
+  const relatorios = await listarRelatorios();
+  const counts = await db
+    .select({ relatorioId: snapshotsCiclo.relatorioId, total: count() })
+    .from(snapshotsCiclo)
+    .groupBy(snapshotsCiclo.relatorioId);
+  const countByRelatorio = new Map(counts.map((c) => [c.relatorioId, Number(c.total)]));
+  return relatorios.map((r) => ({ ...r, snapshotCount: countByRelatorio.get(r.id) ?? 0 }));
 }
 
 export async function listarSnapshotsRelatorio(relatorioId: string) {

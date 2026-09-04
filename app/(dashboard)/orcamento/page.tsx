@@ -1,5 +1,6 @@
 import { formatCurrency, formatDate } from "@/lib/format";
 import { listOrcamento, listRepasses } from "@/db/queries/dashboard";
+import { RepasseRecebimentoForm } from "@/components/repasse-recebimento-form";
 
 export const dynamic = "force-dynamic";
 
@@ -75,7 +76,9 @@ export default async function OrcamentoPage() {
                 <th className="px-4 py-2">Marco</th>
                 <th className="px-4 py-2 text-right">Planejado</th>
                 <th className="px-4 py-2 text-right">Repassado</th>
+                <th className="px-4 py-2 text-right">Saldo</th>
                 <th className="px-4 py-2">Data prevista</th>
+                <th className="px-4 py-2">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -85,7 +88,13 @@ export default async function OrcamentoPage() {
                   <td className="px-4 py-2">{r.marco}</td>
                   <td className="px-4 py-2 text-right">{formatCurrency(r.valorPlanejado)}</td>
                   <td className="px-4 py-2 text-right">{formatCurrency(r.valorRepassado)}</td>
+                  <td className="px-4 py-2 text-right">
+                    {formatCurrency(Number(r.valorPlanejado) - Number(r.valorRepassado ?? 0))}
+                  </td>
                   <td className="px-4 py-2">{formatDate(r.dataPrevista)}</td>
+                  <td className="px-4 py-2">
+                    <RepasseRecebimentoForm repasseId={r.id} valorRepassadoAtual={r.valorRepassado} />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -96,7 +105,8 @@ export default async function OrcamentoPage() {
                 </td>
                 <td className="px-4 py-2 text-right">{formatCurrency(totalRepasses)}</td>
                 <td className="px-4 py-2 text-right">{formatCurrency(totalRepassado)}</td>
-                <td className="px-4 py-2" />
+                <td className="px-4 py-2 text-right">{formatCurrency(totalRepasses - totalRepassado)}</td>
+                <td className="px-4 py-2" colSpan={2} />
               </tr>
             </tfoot>
           </table>
