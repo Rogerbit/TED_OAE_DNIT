@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import { acoes, metas, responsaveis } from "./core";
@@ -29,15 +30,19 @@ export const produtos = pgTable("produtos", {
 
 // Occurrences are explicit, planned instances of a Produto — never
 // auto-created by the application.
-export const ocorrenciasProdutos = pgTable("ocorrencias_produtos", {
-  id: text("id").primaryKey(),
-  produtoId: text("produto_id")
-    .notNull()
-    .references(() => produtos.id),
-  numero: integer("numero").notNull(),
-  dataPrevista: date("data_prevista"),
-  origem: text("origem"),
-});
+export const ocorrenciasProdutos = pgTable(
+  "ocorrencias_produtos",
+  {
+    id: text("id").primaryKey(),
+    produtoId: text("produto_id")
+      .notNull()
+      .references(() => produtos.id),
+    numero: integer("numero").notNull(),
+    dataPrevista: date("data_prevista"),
+    origem: text("origem"),
+  },
+  (table) => [unique().on(table.produtoId, table.numero)],
+);
 
 export const produtosEstadoAtual = pgTable("produtos_estado_atual", {
   produtoId: text("produto_id")
@@ -70,20 +75,24 @@ export const acompanhamentosProdutos = pgTable("acompanhamentos_produtos", {
 });
 
 // Insert-only: a new version is a new row, never an overwrite of a prior one.
-export const entregasVersoes = pgTable("entregas_versoes", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  produtoId: text("produto_id")
-    .notNull()
-    .references(() => produtos.id),
-  ocorrenciaId: text("ocorrencia_id")
-    .notNull()
-    .references(() => ocorrenciasProdutos.id),
-  versaoNumero: integer("versao_numero").notNull(),
-  dataEntrega: date("data_entrega"),
-  resumo: text("resumo"),
-  registradoPor: uuid("registrado_por").references(() => responsaveis.id),
-  criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
-});
+export const entregasVersoes = pgTable(
+  "entregas_versoes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    produtoId: text("produto_id")
+      .notNull()
+      .references(() => produtos.id),
+    ocorrenciaId: text("ocorrencia_id")
+      .notNull()
+      .references(() => ocorrenciasProdutos.id),
+    versaoNumero: integer("versao_numero").notNull(),
+    dataEntrega: date("data_entrega"),
+    resumo: text("resumo"),
+    registradoPor: uuid("registrado_por").references(() => responsaveis.id),
+    criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [unique().on(table.ocorrenciaId, table.versaoNumero)],
+);
 
 export const evidencias = pgTable("evidencias", {
   id: uuid("id").primaryKey().defaultRandom(),

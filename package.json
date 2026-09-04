@@ -11,7 +11,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "seed:extract": "tsx scripts/seed/extract-excel.mts",
-    "seed:db": "tsx scripts/seed/seed-db.mts"
+    "seed:db": "tsx scripts/seed/seed-db.mts",
+    "seed:responsaveis": "tsx scripts/seed/seed-responsaveis.mts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.115.0",

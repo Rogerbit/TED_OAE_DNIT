@@ -1,14 +1,13 @@
 import { date, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { acoes, responsaveis } from "./core";
-import { statusCicloEnum, statusRelatorioEnum } from "./enums";
+import { relatorioCodigoEnum, statusCicloEnum, statusRelatorioEnum } from "./enums";
 
-// Relatórios Gerenciais R1-R15: immutable once `status = 'Fechado'`. DB-level
-// enforcement (trigger rejecting UPDATE on closed rows) is added via a raw
-// migration once this table is in use for writes — for the MVP it only holds
-// the fixed catalog of report codes, never edited outside a migration.
+// Relatórios Gerenciais R1-R15: immutable once `status = 'Fechado'`, enforced
+// by a Postgres trigger (see drizzle/0001_relatorio_imutavel.sql) that
+// rejects any UPDATE on a row that is already Fechado.
 export const relatoriosGerenciais = pgTable("relatorios_gerenciais", {
   id: uuid("id").primaryKey().defaultRandom(),
-  codigo: text("codigo").notNull().unique(), // R1..R15
+  codigo: relatorioCodigoEnum("codigo").notNull().unique(),
   ciclo: text("ciclo"),
   dataPlanejada: date("data_planejada"),
   dataEfetiva: date("data_efetiva"),
@@ -47,6 +46,10 @@ export const snapshotsCiclo = pgTable("snapshots_ciclo", {
   cicloId: uuid("ciclo_id")
     .notNull()
     .references(() => ciclosGovernanca.id),
+  // Set when this snapshot was produced by closing a specific Relatório
+  // Gerencial (the common case) -- nullable because a cycle snapshot could
+  // in principle be taken without closing a report.
+  relatorioId: uuid("relatorio_id").references(() => relatoriosGerenciais.id),
   geradoEm: timestamp("gerado_em", { withTimezone: true }).defaultNow(),
   geradoPor: uuid("gerado_por").references(() => responsaveis.id),
   payloadJson: jsonb("payload_json"),
