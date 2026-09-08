@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { NavTabs } from "@/components/nav-tabs";
 import { CurrentUserPicker, CurrentUserProvider } from "@/lib/current-user";
 import { listResponsaveis } from "@/db/queries/dashboard";
@@ -10,7 +11,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex min-h-screen flex-col bg-slate-50">
         <header className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 px-4 pt-6 text-white sm:px-8">
           <div className="mx-auto max-w-6xl">
-            <div className="flex flex-wrap items-start justify-between gap-2">
+            <Image
+              src="/logos-cabecalho.png"
+              alt="Logomarcas institucionais"
+              width={1476}
+              height={133}
+              priority
+              className="h-12 w-auto"
+            />
+            <div className="mt-3 flex flex-wrap items-start justify-between gap-2">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">
                   TED · OAE · DNIT
