@@ -26,7 +26,7 @@ export const produtos = pgTable("produtos", {
   entregaPrevista: date("entrega_prevista"),
   condicional: boolean("condicional").default(false),
   origem: text("origem"),
-});
+}).enableRLS();
 
 // Occurrences are explicit, planned instances of a Produto — never
 // auto-created by the application.
@@ -42,7 +42,7 @@ export const ocorrenciasProdutos = pgTable(
     origem: text("origem"),
   },
   (table) => [unique().on(table.produtoId, table.numero)],
-);
+).enableRLS();
 
 export const produtosEstadoAtual = pgTable("produtos_estado_atual", {
   produtoId: text("produto_id")
@@ -54,7 +54,7 @@ export const produtosEstadoAtual = pgTable("produtos_estado_atual", {
   semaforoJustificativa: text("semaforo_justificativa"),
   atualizadoEm: timestamp("atualizado_em", { withTimezone: true }).defaultNow(),
   atualizadoPor: uuid("atualizado_por").references(() => responsaveis.id),
-});
+}).enableRLS();
 
 export const acompanhamentosProdutos = pgTable("acompanhamentos_produtos", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -72,7 +72,7 @@ export const acompanhamentosProdutos = pgTable("acompanhamentos_produtos", {
   semaforoAtual: semaforoEnum("semaforo_atual"),
   justificativa: text("justificativa"),
   origem: text("origem"),
-});
+}).enableRLS();
 
 // Insert-only: a new version is a new row, never an overwrite of a prior one.
 export const entregasVersoes = pgTable(
@@ -92,7 +92,7 @@ export const entregasVersoes = pgTable(
     criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
   },
   (table) => [unique().on(table.ocorrenciaId, table.versaoNumero)],
-);
+).enableRLS();
 
 export const evidencias = pgTable("evidencias", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -105,4 +105,4 @@ export const evidencias = pgTable("evidencias", {
   referencia: text("referencia"),
   registradoPor: uuid("registrado_por").references(() => responsaveis.id),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
-});
+}).enableRLS();

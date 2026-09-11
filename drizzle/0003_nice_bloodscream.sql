@@ -1,0 +1,26 @@
+ALTER TABLE "acoes" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "metas" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "responsabilidade_acao" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "responsaveis" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "ted" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "acompanhamentos_atividades" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "atividades" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "atividades_estado_atual" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "acompanhamentos_produtos" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "entregas_versoes" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "evidencias" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "ocorrencias_produtos" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "produtos" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "produtos_estado_atual" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "condicionantes" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "historico_condicionantes" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "historico_pendencias" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "pendencias" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "ciclos_governanca" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "comprovacoes_fiscalizacao" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "fotografias_ciclo" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "relatorios_gerenciais" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "relatorios_historico" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "snapshots_ciclo" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "orcamento" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "repasses" ENABLE ROW LEVEL SECURITY;

@@ -15,7 +15,7 @@ export const relatoriosGerenciais = pgTable("relatorios_gerenciais", {
   referenciaDigital: text("referencia_digital"),
   fechadoEm: timestamp("fechado_em", { withTimezone: true }),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
-});
+}).enableRLS();
 
 export const relatoriosHistorico = pgTable("relatorios_historico", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -28,7 +28,7 @@ export const relatoriosHistorico = pgTable("relatorios_historico", {
   statusAnterior: statusRelatorioEnum("status_anterior"),
   statusNovo: statusRelatorioEnum("status_novo"),
   referenciaDigital: text("referencia_digital"),
-});
+}).enableRLS();
 
 export const ciclosGovernanca = pgTable("ciclos_governanca", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -36,7 +36,7 @@ export const ciclosGovernanca = pgTable("ciclos_governanca", {
   dataInicio: date("data_inicio"),
   dataFim: date("data_fim"),
   status: statusCicloEnum("status").notNull().default("Aberto"),
-});
+}).enableRLS();
 
 // Insert-only, one row per cycle-close event: an immutable point-in-time
 // copy of the governance state, replacing the old localStorage "close cycle"
@@ -54,7 +54,7 @@ export const snapshotsCiclo = pgTable("snapshots_ciclo", {
   geradoPor: uuid("gerado_por").references(() => responsaveis.id),
   payloadJson: jsonb("payload_json"),
   hash: text("hash"),
-});
+}).enableRLS();
 
 export const fotografiasCiclo = pgTable("fotografias_ciclo", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -67,7 +67,7 @@ export const fotografiasCiclo = pgTable("fotografias_ciclo", {
   descricao: text("descricao"),
   registradoPor: uuid("registrado_por").references(() => responsaveis.id),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
-});
+}).enableRLS();
 
 export const comprovacoesFiscalizacao = pgTable("comprovacoes_fiscalizacao", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -78,4 +78,4 @@ export const comprovacoesFiscalizacao = pgTable("comprovacoes_fiscalizacao", {
   referencia: text("referencia"),
   registradoPor: uuid("registrado_por").references(() => responsaveis.id),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
-});
+}).enableRLS();

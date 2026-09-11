@@ -9,7 +9,7 @@ export const ted = pgTable("ted", {
   objeto: text("objeto"),
   dataInicio: date("data_inicio"),
   dataFim: date("data_fim"),
-});
+}).enableRLS();
 
 export const acoes = pgTable("acoes", {
   id: text("id").primaryKey(),
@@ -19,7 +19,7 @@ export const acoes = pgTable("acoes", {
   titulo: text("titulo").notNull(),
   origem: text("origem"),
   estado: text("estado"),
-});
+}).enableRLS();
 
 export const metas = pgTable("metas", {
   id: text("id").primaryKey(),
@@ -29,7 +29,7 @@ export const metas = pgTable("metas", {
   codigo: text("codigo").notNull(),
   descricao: text("descricao"),
   origem: text("origem"),
-});
+}).enableRLS();
 
 export const responsaveis = pgTable("responsaveis", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -37,7 +37,7 @@ export const responsaveis = pgTable("responsaveis", {
   email: text("email"),
   papel: text("papel"),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
-});
+}).enableRLS();
 
 export const responsabilidadeAcao = pgTable("responsabilidade_acao", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -49,4 +49,4 @@ export const responsabilidadeAcao = pgTable("responsabilidade_acao", {
     .references(() => responsaveis.id),
   papel: text("papel"),
   ativo: boolean("ativo").default(true),
-});
+}).enableRLS();

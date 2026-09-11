@@ -25,7 +25,7 @@ export const pendencias = pgTable("pendencias", {
   prazo: date("prazo"),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
   criadoPor: uuid("criado_por").references(() => responsaveis.id),
-});
+}).enableRLS();
 
 export const historicoPendencias = pgTable("historico_pendencias", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -40,7 +40,7 @@ export const historicoPendencias = pgTable("historico_pendencias", {
   justificativa: text("justificativa"),
   prazo: date("prazo"),
   evidenciaId: uuid("evidencia_id"),
-});
+}).enableRLS();
 
 export const condicionantes = pgTable("condicionantes", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -56,7 +56,7 @@ export const condicionantes = pgTable("condicionantes", {
   responsavelId: uuid("responsavel_id").references(() => responsaveis.id),
   criadoEm: timestamp("criado_em", { withTimezone: true }).defaultNow(),
   criadoPor: uuid("criado_por").references(() => responsaveis.id),
-});
+}).enableRLS();
 
 export const historicoCondicionantes = pgTable("historico_condicionantes", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -70,4 +70,4 @@ export const historicoCondicionantes = pgTable("historico_condicionantes", {
   descricao: text("descricao"),
   justificativa: text("justificativa"),
   evidenciaId: uuid("evidencia_id"),
-});
+}).enableRLS();

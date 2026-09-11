@@ -15,7 +15,7 @@ export const atividades = pgTable("atividades", {
   fimPrevisto: date("fim_previsto"),
   condicional: boolean("condicional").default(false),
   origem: text("origem"),
-});
+}).enableRLS();
 
 // One row per Atividade: the current status/percentual/semáforo, kept as a
 // denormalized "latest known state" for fast list reads. Every write to this
@@ -33,7 +33,7 @@ export const atividadesEstadoAtual = pgTable("atividades_estado_atual", {
   semaforoJustificativa: text("semaforo_justificativa"),
   atualizadoEm: timestamp("atualizado_em", { withTimezone: true }).defaultNow(),
   atualizadoPor: uuid("atualizado_por").references(() => responsaveis.id),
-});
+}).enableRLS();
 
 // Append-only audit trail (rule: every value change needs who/when/before/after
 // and a justification when a percentual decreases). Never updated or deleted.
@@ -52,4 +52,4 @@ export const acompanhamentosAtividades = pgTable("acompanhamentos_atividades", {
   semaforoAtual: semaforoEnum("semaforo_atual"),
   justificativa: text("justificativa"),
   origem: text("origem"),
-});
+}).enableRLS();

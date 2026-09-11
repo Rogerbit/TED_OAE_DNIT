@@ -21,7 +21,7 @@ export const orcamento = pgTable("orcamento", {
   condicional: boolean("condicional").default(false),
   revisaoFonte: boolean("revisao_fonte").default(false),
   origem: text("origem"),
-});
+}).enableRLS();
 
 // The 9 planned disbursement installments (Parcela 1..9). Global-only, per
 // governance rule: never distributed down to individual activities/products.
@@ -35,4 +35,4 @@ export const repasses = pgTable("repasses", {
   dataPrevista: date("data_prevista"),
   dataRealizada: date("data_realizada"),
   status: text("status"),
-});
+}).enableRLS();
